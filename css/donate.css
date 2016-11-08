@@ -669,6 +669,12 @@ input[type=number] {
     .donation-form {
         padding: 0 1em 1em;
 		margin-top: 25px;
+		border-radius: 0;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		box-shadow: none;
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
     }
     .radio {
         padding: 5px;
@@ -704,6 +710,12 @@ input[type=number] {
 	}
 	.pymt-type.pp {
 		margin: 5px 15px 5px 0;
+	}
+	.donation-form, .col-sm-8.col-xs-12, .main {
+        padding: 0!important;
+    }
+	.alert {
+		margin: 10px 10px 0;
 	}
 }
 @media only screen and (max-width: 400px) {

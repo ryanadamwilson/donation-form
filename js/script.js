@@ -23,6 +23,18 @@
                     number: true,
                     required: '#level-other:checked'
                 },
+                card_number: {
+                    required: '#pymt_type_cc:checked'
+                },
+                card_cvv: {
+                    required: '#pymt_type_cc:checked'
+                },
+                card_exp_date_month: {
+                    required: '#pymt_type_cc:checked'
+                },
+                card_exp_date_year: {
+                    required: '#pymt_type_cc:checked'
+                },
                 tribute_type: {
                     required: true
                 },
@@ -102,15 +114,29 @@
                     var donateCallback = function(data) {
                         showResponse(data);
                     };
+                    var startDonationCallback = function(data) {
+                        showResponse(data);
+                    };
 
-                    //Call Donate API
-                    luminateExtend.api({
-                        api: 'CRDonationAPI',
-                        data:   donationData,
-                        requestType: 'POST',
-                        requiresAuth: false,
-                        callback: donateCallback
-                    });
+                    if($('input#pymt_type_pp').is(':checked')) {
+                        //Call startDonation API
+                        luminateExtend.api({
+                            api: 'CRDonationAPI',
+                            data:   donationData,
+                            requestType: 'POST',
+                            requiresAuth: false,
+                            callback: startDonationCallback
+                        });
+                    } else {
+                        //Call Donate API
+                        luminateExtend.api({
+                            api: 'CRDonationAPI',
+                            data:   donationData,
+                            requestType: 'POST',
+                            requiresAuth: false,
+                            callback: donateCallback
+                        });
+                    }
                     return false; //block default submit action for from
                 } else {
                     //Redirect spammers to general donation error page
@@ -182,15 +208,17 @@
             $.each(userData, function(key, value) {
                 buildData += '&' + key + '=' + value;
             });
-            console.log(buildData);
             // create final API string with all required information/user entered data.
             // We'll pass this into the API call
-            var donationData = 'method=donate' + buildData;
+            if($('input#pymt_type_pp').is(':checked')) {
+                var donationData = 'method=startDonation' + '&extproc=paypal' + '&finish_error_redirect=' + $('input[name="finish_error_redirect"]').val() + '&finish_success_redirect=' + $('input[name="finish_success_redirect"]').val() + buildData;
+            } else {
+                var donationData = 'method=donate' + buildData;
+            }
             return donationData;
         }
 
         function showResponse(data) {
-            console.log(data);
             //If something went wrong, display error to user
             if(data.donationResponse.errors) {
                 $('input[name="card_cvv"]').val('');
@@ -209,6 +237,8 @@
                 $('.donation-loading').remove();
                 $('.readmore-js-toggle').removeAttr('style');
                 $('.donation-copy, .donation-form, #validation-errors:first-of-type .alert').show();
+            } else if(data.donationResponse.redirect) {
+                window.location.replace(data.donationResponse.redirect.url);
             } else {
                 //Otherwise, show success message
                 //Pull in GTM tracking information for analytics
@@ -306,16 +336,6 @@ function UIHandlers() {
             $(this).prop('placeholder', '');
         }
     });
-    // $('#other-amount').on('keydown', function(e) {
-    //     if (($(this).get(0).selectionStart == 0 && (e.keyCode < 35 || e.keyCode > 40))
-    //         || ($(this).get(0).selectionStart == 1 && e.keyCode == 8)) {
-    //         return false;
-    //     }
-    // });
-    // //Always place cursor after dollar sign on click
-    // $("#other-amount").mouseup(function () {
-    //     this.setSelectionRange(this.value.length, this.value.length);
-    // });
 
     //Prevent more than two numbers after decimal
     $('#other-amount').keypress(function (e) {
@@ -346,6 +366,42 @@ function UIHandlers() {
 
     $('.close-button').click(function() {
         $('#msg-pop-up').fadeOut(400);
+    });
+
+    //Select payment type
+    $('.pymt-type').click(function() {
+        var self = $(this);
+        if(!self.hasClass('active')) {
+            $('.pymt-type').toggleClass('active');
+            $('.pymt-info-cc').slideToggle();
+            if(self.hasClass('pp')){
+                $('#donate-submit').text('Continue with PayPal');
+            } else {
+                $('#donate-submit').text('Submit Donation');
+            }
+        }
+    });
+
+    $('input[name="sustaining_gift"]').on('change', function() {
+        if($('#pymt_type_pp').is(':checked')) {
+            $('#pymt_type_cc').prop('checked', true);
+            $('.pymt-type').toggleClass('active');
+            $('#donate-submit').text('Submit Donation');
+
+        }
+    });
+
+    //Hide PayPal if monthly selected
+    function hidePayPal() {
+        if($('.sustaining').is(':checked')) {
+            $('.pymt-type.pp').hide();
+        } else {
+            $('.pymt-type.pp').show();
+        }
+    }
+    hidePayPal();
+    $('.sustaining').on('change', function() {
+        hidePayPal();
     });
 
     //Read more function

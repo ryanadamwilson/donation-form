@@ -15,6 +15,11 @@
 				$scope.$apply(function () {
 					self.data = data.getDonationFormInfoResponse;
 					self.levels = data.getDonationFormInfoResponse.donationLevels.donationLevel;
+					//If form only has one level, we need to wrap it in an array
+					//else it breaks because it's only an object
+					if (self.levels.constructor != Array) {
+						self.levels = [self.levels];
+					}
 				});
 				UIHandlers();
 			} else if (data.errorResponse.message.indexOf('not found' >= 0)){

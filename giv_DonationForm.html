@@ -1,0 +1,500 @@
+<header class="top-level">
+    <div class="wrapper">
+        <div class="mobile-top-bar">
+              <div id="overlay"></div>
+        </div>
+        <div class="logo-wrapper">
+            <a href="https://giving.mskcc.org/" class="logo-link">
+                <img class="logo-size" alt="Memorial Sloan Kettering Cancer Center" src="https://secure2.convio.net/mskcc/images/content/pagebuilder/MSK_GivingHead.png">
+            </a>
+        </div>
+    </div>
+</header>
+<div class="container main" ng-app="donate" id="donationForm">
+    <div class="row">
+        <div class="donation-copy">
+            <div class="col-xs-12 [[?xxx::x[[E51:reus_donation_banner_[[S334:banner]]]]xx::::banner]]">
+                [[?xxx::x[[E51:reus_donation_banner_[[S334:banner]]]]xx::::[[E51:reus_donation_banner_[[S334:banner]]]]]]
+            </div>
+            <div class="[[?[[S334:content]]::none::col-sm-2 hidden-xs::col-sm-4 col-xs-12]]">
+                [[?xxx::x[[E51:reus_donation_content_[[S334:content]]]]xx::[[E51:reus_donation_content_default]]::[[E51:reus_donation_content_[[S334:content]]]]]]
+            </div>
+        </div>
+        <div class="readmore-js-toggle [[?[[S334:content]]::none::hidden-xs::col-xs-12]]">
+            <i class="icon-chevron-down desc-open"></i>
+        </div>
+        <div class="col-sm-8 col-xs-12">
+            [[?xx::x[[S1:user_name]]x::
+            <!--User not logged in-->
+            ::
+                <div class="row alert alert-info fade in marg-bott15">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <p>You are currently logged in as [[S1:first_name]] [[S1:last_name]].</p>
+                    <p>If you are not [[S1:first_name]] [[S1:last_name]], <a href='https://secure2.convio.net/mskcc/site/UserLogin?logout&NEXTURL=[[T1:[[E130:"[[S8]]" "&amp;" "&" replaceall]]]]'>click here</a> to log out.</p>
+                </div>
+            ]]
+            [[?xx::x[[S80:previous_transaction]]x::
+            <!--No transaction history in session-->
+            ::
+                <div class="row alert alert-info fade in marg-bott15">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <p>A previous transaction for [[S80:previous_transaction]] has already been processed. If you complete this transaction, it will be a separate transaction.</p>
+                </div>
+            ]]
+            [[?xxx::x[[S334:pperror]]xx::
+            <!--Hola, como estas?-->
+            ::
+                <div class="row alert alert-danger fade in marg-bott15">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <p>The PayPal transaction encountered an error or was canceled. Please reenter your information below and try again, or <a href="http://giving.mskcc.org/story/contact-us">contact us</a> if this error persists.</p>
+                </div>
+            ]]
+            <form class="form-horizontal luminateApi donation-form" method="POST" action="https://secure2.convio.net/mskcc/site/CRDonationAPI" data-luminateApi='{"callback": "donateCallback"}' ng-controller="fieldController as fieldCtrl" name="form">
+                <input type="text" name="catch" id="catch" autocomplete="off" title="Leave this field blank">
+                <input type="hidden" name="method" value="donate">
+                <input type="hidden" name="form_id" value="[[?xxx::x[[S334:donID]]xx::10071::[[S334:donID]]]]">
+                <input type="hidden" name="finish_error_redirect" value='[[T1:[[E130:"[[S8]]" "&amp;" "&" replaceall]]]][[?xxx::x[[S334:pperror]]xx::%26pperror%3Dtrue::]]'>
+                <input type="hidden" name="finish_success_redirect" value="https%3A%2F%2Fsecure2.convio.net%2Fmskcc%2Fsite%2FSPageServer%3Fpagename%3Dpaypal_thanks[[?xxx::x[[E51:reus_donation_thanks_[[S334:content]]]]xx::::%26content%3D[[S334:content]]]]">
+                <input type="hidden" name="validate" value="true">
+                <div ng-init="checkedLevel = {}">
+                    <div ng-if="[[?xxx::x[[S334:checkedLevel]]xx::false::true]]">
+                        <input type="hidden"
+                            name="checkedLevel"
+                            value="[[S334:checkedLevel]]"
+                            ng-model="checkedLevel.value"
+                            ng-init="checkedLevel.value = [[S334:checkedLevel]]">
+                    </div>
+                    <div ng-if="[[?xxx::x[[S334:amount]]xx::false::true]]">
+                        <input type="hidden"
+                            name="checkedLevel.amt"
+                            value='[[E130:"[[S334:amount]]" 1 roundmult number ".00" "" replaceall]]'
+                            ng-model="checkedLevel.amt"
+                            ng-init='checkedLevel.amt = [[E130:"[[S334:amount]]" 1 roundmult number ".00" "" replaceall]]'>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="section-header">Donation Amount</div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div>
+                                <div class="radio col-md-2 col-sm-4 col-xs-6" ng-if="level.userSpecified == 'false'" ng-repeat="level in fieldCtrl.levels">
+                                    <label ng-class="{'checked' : checkedLevel.value == level.level_id}" ng-cloak>
+                                        <input type="radio" name="level_id" data-convio="level_id" value="{{level.level_id}}" ng-checked="checkedLevel.value == level.level_id" required>{{level.amount.decimal | currency:"$":0}}
+                                    </label>
+                                </div>
+                                <div class="radio other-amt col-md-2 col-sm-4 col-xs-6" ng-if="level.userSpecified == 'true'" ng-repeat="level in fieldCtrl.levels">
+                                    <span class="dollar-sign">$</span>
+                                    <label class="other" ng-class="{'checked' : checkedLevel.value == level.level_id}" ng-cloak>
+                                        <input type="radio" id="level-other" name="level_id" data-convio="level_id" value="{{level.level_id}}" ng-checked="checkedLevel.value == level.level_id" required>
+                                        <input type="tel" class="other-input required" id="other-amount" name="other_amount" data-convio="other_amount" placeholder="Other" value="{{checkedLevel.amt}}" pattern="\d*" min="1">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row padding15-0-0" ng-if="fieldCtrl.data.supportsLevelAutorepeat == 'true'">
+                    <div class="checkbox col-xs-12">
+                        <label>
+                            <input type="checkbox" name="sustaining_gift" data-convio="sustaining.gift" [[?[[S334:content]]::monthly::value="true" checked disabled::value="false"]] class="sustaining"><span class="span-check">Yes, I want to make a difference throughout the year. Make my gift monthly.</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row padding15-0-0">
+                    <div class="checkbox col-xs-12">
+                        <label>
+                            <input type="checkbox" name="designate_gift" data-convio="designate.gift" value="false" class="designate"> <span class="span-check">Choose a program for this gift to support.</span>
+                        </label>
+                    </div>
+                </div>
+                <!--<div class="row padding15-0" style="display:none;" ng-if="fieldCtrl.data.supportsDesignation == 'true'">-->
+                <div class="row padding15-0" style="display:none;">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="radio program col-lg-2 col-sm-4 col-xs-6 mob-force">
+                                <label>
+                                    <input type="radio" name="designated_id" data-convio="designated.id" value="150280G">Greatest Need
+                                </label>
+                            </div>
+                            <div class="radio program col-lg-2 col-sm-4 col-xs-6">
+                                <label>
+                                    <input type="radio" name="designated_id" data-convio="designated.id" value="150280R">Research
+                                </label>
+                            </div>
+                            <div class="radio program col-lg-2 col-sm-4 col-xs-6">
+                                <label>
+                                    <input type="radio" name="designated_id" data-convio="designated.id" value="150280E">Education
+                                </label>
+                            </div>
+                            <div class="radio program col-lg-2 col-sm-4 col-xs-6 mob-force">
+                                <label>
+                                    <input type="radio" name="designated_id" data-convio="designated.id" value="150280P">Patient Care
+                                </label>
+                            </div>
+                            <div class="radio other-des program col-lg-2 col-sm-4 col-xs-6">
+                                <label class="other">
+                                    <input type="radio" class="des-other" id="des-other" name="designated_id" data-convio="designated.id" value="151000G">
+                                    <input type="text" class="other-input" id="other-des-input" name="designated_write_in" data-convio="designated_write_in" placeholder="Other">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row padding15-0-0" ng-if="fieldCtrl.data.supportsTribute == 'true'">
+                    <div class="checkbox col-xs-12">
+                        <label>
+                            <input type="checkbox" name="tribute" data-convio="tribute" [[?[[S334:content]]::honor::value="true" checked disabled::value="false"]] class="tribute-check"> <span class="span-check">Make this an honor or memorial gift.</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="tribute" [[?[[S334:content]]::honor::::style="display:none"]] ng-if="fieldCtrl.data.supportsTribute == 'true'">
+                    <div class="row padding15-0">
+                        <div class="form-group">
+                            <label class="col-xs-12 trib-select">Please select a tribute type</label>
+                            <div class="col-xs-12">
+                                <div class="radio col-lg-2 col-sm-4 col-xs-12">
+                                    <label>
+                                        <input type="radio" name="tribute_type" data-convio="tribute_type" value="tribute" [[?[[S334:content]]::honor::required::]]>In Honor Of
+                                    </label>
+                                </div>
+                                <div class="radio col-lg-2 col-sm-4 col-xs-12 mob-force">
+                                    <label>
+                                        <input type="radio" name="tribute_type" data-convio="tribute_type" value="memorial" [[?[[S334:content]]::honor::required::]]>In Memory Of
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row padding15-0">
+                        <div class="col-sm-6 col-xs-12">
+                            <label class="control-label">Honoree Name:</label>
+                            <div>
+                                <input type="text" class="form-control tribute" [[?[[S334:content]]::honor::required::]] name="tribute_honoree_name_full" data-convio="tribute.honoree.name.full">
+                            </div>
+                        </div>
+                        <p class="col-xs-12 padding15-15-0">Send gift notification to:</p>
+                        <div class="col-sm-6 col-xs-12">
+                            <label class="control-label">Name:</label>
+                            <div>
+                                <input type="text" class="form-control tribute" [[?[[S334:content]]::honor::required::]] name="tribute_notify_name_full" data-convio="tribute.notify.name.full">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <label class="control-label">Street 1:</label>
+                            <div class="">
+                                <input type="text" class="form-control tribute" [[?[[S334:content]]::honor::required::]] name="tribute_notify_address_street1" data-convio="tribute.notify.address.street1">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <label class="control-label">Street 2: (optional)</label>
+                            <div class="">
+                                <input type="text" class="form-control optional" name="tribute_notify_address_street2" data-convio="tribute.notify.address.street2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <label class="control-label">City:</label>
+                            <div class="">
+                                <input type="text" class="form-control tribute" [[?[[S334:content]]::honor::required::]] name="tribute_notify_address_city" data-convio="tribute.notify.address.city">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-xs-12 col-md-2">
+                            <label class="control-label">State:</label>
+                            <div class="" ng-controller="stateController as stateCtrl">
+                                <select class="form-control tribute" name="tribute_notify_address_state" data-convio="tribute.notify.address.state" [[?[[S334:content]]::honor::required::]]>
+                                    <option style="display:none" value="">-- Select --</option>
+                                    <option ng-repeat="state in stateCtrl.state" value="{{state.abbreviation}}">{{state.abbreviation}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-xs-12 col-lg-3 col-md-4">
+                            <label class="control-label">ZIP Code:</label>
+                            <div class="">
+                                <input type="number" class="form-control tribute" name="tribute_notify_address_zip" data-convio="tribute.notify.address.zip" [[?[[S334:content]]::honor::required::]] pattern="\d*" min="1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <label class="control-label">Country:</label>
+                            <div class="" ng-controller="stateController as stateCtrl">
+                                <select class="form-control tribute" name="tribute_notify_address_country" data-convio="tribute.notify.address.country" [[?[[S334:content]]::honor::required::]]>
+                                    <option
+                                        ng-repeat="country in stateCtrl.country"
+                                        value="{{country}}">
+                                    {{country}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="section-header pull-left">Your Information</div>
+                    <div class="required-disc pull-right">All fields are required unless otherwise noted</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5 col-xs-12 col-md-4 col-lg-3">
+                        <label class="control-label">Title: (optional)</label>
+                        <div class="">
+                            <select
+                                class="form-control optional"
+                                name="billing_name_title"
+                                data-convio="billing.name.title"
+                                ng-model="selectedTitle"
+                                ng-init="selectedTitle = '[[S1:cons_title]]'">
+                                <option style="display:none" value="">-- Select --</option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Miss">Miss</option>
+                                <option value="Mr. and Mrs.">Mr. and Mrs.</option>
+                                <option value="Dr.">Dr.</option>
+                                <option value="Dr. and Mrs.">Dr. and Mrs.</option>
+                                <option value="Dr. and Mr.">Dr. and Mr.</option>
+                                <option value="Drs.">Drs.</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label class="control-label">First Name:</label>
+                        <div>
+                            <input type="text" class="form-control required" name="billing_name_first" data-convio="billing.name.first" value="[[?xxx::x[[S1:first_name]]xx::::[[S1:first_name]]]]" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <label class="control-label">Last Name:</label>
+                        <div class="">
+                            <input type="text" class="form-control required" name="billing_name_last" data-convio="billing.name.last" value="[[?xxx::x[[S1:last_name]]xx::::[[S1:last_name]]]]" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label class="control-label">Email Address:</label>
+                        <div class="">
+                            <input type="email" class="form-control required" name="donor_email" data-convio="donor.email" value="[[?xxx::x[[S1:primary_email]]xx::::[[S1:primary_email]]]]" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12 opt-in hidden">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="donor_email_opt_in" data-convio="donor.email_opt_in" value="true" class="form-control-check" checked> <span class="span-check">Yes, I'd like to receive email from MSK</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="section-header">Billing Information</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label class="control-label">Street 1:</label>
+                        <div class="">
+                            <input type="text" class="form-control required" name="billing_address_street1" data-convio="billing.address.street1" value="[[?xxx::x[[S1:home_street1]]xx::::[[S1:home_street1]]]]" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <label class="control-label">Street 2: (optional)</label>
+                        <div class="">
+                            <input type="text" class="form-control optional" name="billing_address_street2" data-convio="billing.address.street2" value="[[?xxx::x[[S1:home_street2]]xx::::[[S1:home_street2]]]]">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label class="control-label">City:</label>
+                        <div class="">
+                            <input type="text" class="form-control required" name="billing_address_city" data-convio="billing.address.city" value="[[?xxx::x[[S1:home_city]]xx::::[[S1:home_city]]]]" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-12 col-md-2">
+                        <label class="control-label">State:</label>
+                        <div class="select" ng-controller="stateController as stateCtrl">
+                            <select class="form-control required" name="billing_address_state" data-convio="billing.address.state" ng-model="selectedState" ng-init="selectedState = '[[S1:home_stateprov]]'">
+                                <option style="display:none" value="">-- Select --</option>
+                                <option
+                                    ng-repeat="state in stateCtrl.state"
+                                    value="{{state.abbreviation}}"
+                                    ng-selected="{{state.abbreviation == '[[S1:home_stateprov]]'}}">
+                                {{state.abbreviation}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-12 col-lg-3 col-md-4">
+                        <label class="control-label">ZIP Code:</label>
+                        <div class="">
+                            <input type="tel" class="form-control required" name="billing_address_zip" data-convio="billing.address.zip" value="[[?xxx::x[[S1:home_zip]]xx::::[[S1:home_zip]]]]" required novalidate>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label class="control-label">Country:</label>
+                        <div class="" ng-controller="stateController as stateCtrl">
+                            <select id="billing_address_country" class="form-control required" name="billing_address_country" data-convio="billing.address.country" ng-model="selectedCountry" ng-init="selectedCountry = '[[?xxx::x[[S1:home_country]]xx::United States::[[S1:home_country]]]]'">
+                                <option
+                                    ng-repeat="country in stateCtrl.country"
+                                    value="{{country}}"
+                                    ng-selected="{{country == '[[S1:home_country]]'}}">
+                                {{country}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="section-header">Payment Information</div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="pymt-type cc active">
+                            <label>
+                                <input type="radio" name="pymt_type" value="cc" id="pymt_type_cc" checked>
+                                <img src="https://secure2.convio.net/mskcc/images/content/pagebuilder/CC-lock-up-updated.png" class="cc-img">
+                            </label>
+                        </div>
+                        <div class="pymt-type pp">
+                            <label>
+                                <input type="radio" name="pymt_type" value="pp" id="pymt_type_pp">
+                                <img src="https://secure2.convio.net/mskcc/images/content/pagebuilder/paypal-logo.png" alt="Pay with Paypal">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="pymt-info-cc">
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <label class="control-label required">Card Number:</label>
+                            <div class="">
+                                <input type="tel" class="form-control required" name="card_number" data-convio="card_number" required novalidate>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-xs-6 col-md-2">
+                            <label class="control-label">CVV:</label>
+                            <div class="">
+                                <input type="tel" class="form-control required" name="card_cvv" data-convio="card_cvv" required novalidate>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-xs-6 what-is">
+                            <div id="cvv_button" onclick="showCVVMsg()">What is this?</div>
+                        </div>
+                    </div>
+                    <div class="row" ng-controller="dateController as date">
+                        <div class="col-sm-6 col-xs-12 no-padd payInfo">
+                            <label class="col-xs-12 control-label" style="text-align:left;">Expiration Date:</label>
+                            <div class="col-sm-6 col-xs-8 col-md-5 col-lg-4">
+                                <select class="form-control required" name="card_exp_date_month" data-convio="card_exp_date_month" ng-model="selectedMonth" ng-init="selectedMonth = '[[S9:pattern:MM]]'" required>
+                                    <option
+                                        ng-repeat="month in date.months"
+                                        ng-selected="{{month == '[[S9:pattern:MM]]'}}"
+                                        value="{{month}}">{{month}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-xs-8 col-md-5 col-lg-4">
+                                <select class="form-control required" name="card_exp_date_year" data-convio="card_exp_date_year" required>
+                                    <option ng-repeat="year in date.years" value="{{year}}">{{year}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" id="donate-submit" class="btn btn-primary">Submit Donation</button>
+                    <img id="norton-img" src="https://secure2.convio.net/mskcc/images/content/pagebuilder/norton_secured_transparent.png">
+                </div>
+                <div class="row">
+                    <p>Your credit card will be charged upon clicking the submit button.</p>
+                    <p>Prefer to give a gift through the mail? <a href="DocServer/MSK_Offline_Donation_Form?docID=6021">Download and print a form</a>.</p>
+                    <div class="disclaimer">
+                        <p>When you make a gift to MSK, you're standing with us in the fight against cancer and will receive email updates about how your support makes a difference for those we serve. You can unsubscribe at any time.</p>
+                        [[?xxx::x[[E51:reus_donation_disclaimer_[[S334:content]]]]xx::::[[E51:reus_donation_disclaimer_[[S334:content]]]]]]
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="thank-you col-sm-8 col-sm-offset-2 col-xs-12">
+            <div class="col-xs-12 reus-thanks">
+                [[?xxx::x[[E51:reus_donation_thanks_[[S334:content]]]]xx::[[E51:reus_donation_thanks_default]]::[[E51:reus_donation_thanks_[[S334:content]]]]]]
+            </div>
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="transaction-summary-entry">
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-label">Date:</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-value" id="date"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="transaction-summary-entry">
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-label">Donation Amount:</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-value don-amount"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="transaction-summary-entry">
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-label">Confirmation code:</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-value" id="confirmation_code"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="transaction-summary-entry">
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-label">Transaction ID:</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-value" id="trans-id"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="transaction-summary-entry">
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-label">Tax ID:</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <p class="entry-value" id="tax-id"></p>
+                        </div>
+                    </div>
+                </div>
+                <p class="cc_disclaimer">
+                    [[S51:cc_statement_disclaimer]]
+                </p>
+                <p><a href="http://giving.mskcc.org">Return to our home page</a></p>
+            </div>
+        </div>
+    </div>
+    <footer class="footer" role="contentinfo">
+        [[?xxx::x[[E51:reus_donation_wrpr_[[S334:wrpr]]]]xx::[[E51:reus_donation_wrpr_default]]::[[E51:reus_donation_wrpr_[[S334:wrpr]]]]]]
+    </footer>
+    <div id="msg-pop-up">
+        <div class="close-button">X</div>
+        <div id="credit-card-msg">
+            <h2>Visa, MasterCard and Discover:</h2>
+            <p>The verification code for Visa, MasterCard, and Discover is a 3-digit number printed on the back of your card. It appears after the account number or last 4-digits of your account number, in the signature panel.</p>
+            <h2>American Express</h2>
+            <p>The American Express verification code is a 4-digit number printed on the front of your card. It appears above and to the right of the embossed account number.</p>
+        </div>
+        <div class="arrow-down" style="margin-left: 220px;"></div>
+    </div>
+    <script type="text/javascript">
+        var donationRedirect = 'http://mskcc.convio.net/site/Donation2?df_id=' + [[S334:donID]];
+    </script>
+</div>

@@ -1,4 +1,5 @@
 (function($) {
+    console.log('hey');
     // define API init
     luminateExtend({
         apiKey: '72737007',
@@ -119,16 +120,7 @@
                         showResponse(data);
                     };
 
-                    if($('input#pymt_type_cc').is(':checked')) {
-                        //Call Donate API
-                        luminateExtend.api({
-                            api: 'CRDonationAPI',
-                            data:   donationData,
-                            requestType: 'POST',
-                            requiresAuth: false,
-                            callback: donateCallback
-                        });
-                    } else {
+                    if($('input#pymt_type_pp').is(':checked')) {
                         //Call startDonation API
                         luminateExtend.api({
                             api: 'CRDonationAPI',
@@ -136,6 +128,15 @@
                             requestType: 'POST',
                             requiresAuth: false,
                             callback: startDonationCallback
+                        });
+                    } else {
+                        //Call Donate API
+                        luminateExtend.api({
+                            api: 'CRDonationAPI',
+                            data:   donationData,
+                            requestType: 'POST',
+                            requiresAuth: false,
+                            callback: donateCallback
                         });
                     }
                     return false; //block default submit action for from
@@ -212,10 +213,10 @@
             console.log(buildData);
             // create final API string with all required information/user entered data.
             // We'll pass this into the API call
-            if($('input#pymt_type_cc').is(':checked')) {
-                var donationData = 'method=donate' + buildData;
-            } else {
+            if($('input#pymt_type_pp').is(':checked')) {
                 var donationData = 'method=startDonation' + '&extproc=paypal' + '&finish_error_redirect=' + $('input[name="finish_error_redirect"]').val() + '&finish_success_redirect=' + $('input[name="finish_success_redirect"]').val() + buildData;
+            } else {
+                var donationData = 'method=donate' + buildData;
             }
             console.log(donationData);
             return donationData;
@@ -383,6 +384,15 @@ function UIHandlers() {
             } else {
                 $('#donate-submit').text('Submit Donation');
             }
+        }
+    });
+
+    $('input[name="sustaining_gift"]').on('change', function() {
+        if($('#pymt_type_pp').is(':checked')) {
+            $('#pymt_type_cc').prop('checked', true);
+            $('.pymt-type').toggleClass('active');
+            $('#donate-submit').text('Submit Donation');
+
         }
     });
 
