@@ -382,28 +382,6 @@ function UIHandlers() {
         }
     });
 
-    $('input[name="sustaining_gift"]').on('change', function() {
-        if($('#pymt_type_pp').is(':checked')) {
-            $('#pymt_type_cc').prop('checked', true);
-            $('.pymt-type').toggleClass('active');
-            $('#donate-submit').text('Submit Donation');
-
-        }
-    });
-
-    //Hide PayPal if monthly selected
-    function hidePayPal() {
-        if($('.sustaining').is(':checked')) {
-            $('.pymt-type.pp').hide();
-        } else {
-            $('.pymt-type.pp').show();
-        }
-    }
-    hidePayPal();
-    $('.sustaining').on('change', function() {
-        hidePayPal();
-    });
-
     //Read more function
     $('.readmore-js-toggle').click(function() {
         if($(this).hasClass('active')) {

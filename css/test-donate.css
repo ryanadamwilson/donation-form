@@ -1,6 +1,4 @@
 @font-face{font-family:open_sans;src:url(../../../fonts/OpenSans-Bold-webfont.eot);src:url(../../../fonts/OpenSans-Bold-webfont.eot?#iefix) format('embedded-opentype'),url(../../../fonts/OpenSans-Bold-webfont.woff) format('woff'),url(../../../fonts/OpenSans-Bold-webfont.ttf) format('truetype'),url(../../../fonts/OpenSans-Bold-webfont.svg#open_sansbold) format('svg');font-weight:700;font-style:normal}@font-face{font-family:open_sans;src:url(../../../fonts/OpenSans-BoldItalic-webfont.eot);src:url(../../../fonts/OpenSans-BoldItalic-webfont.eot?#iefix) format('embedded-opentype'),url(../../../fonts/OpenSans-BoldItalic-webfont.woff) format('woff'),url(../../../fonts/OpenSans-BoldItalic-webfont.ttf) format('truetype'),url(../../../fonts/OpenSans-BoldItalic-webfont.svg#open_sansbold_italic) format('svg');font-weight:700;font-style:italic}@font-face{font-family:open_sans;src:url(../../../fonts/OpenSans-Italic-webfont.eot);src:url(../../../fonts/OpenSans-Italic-webfont.eot?#iefix) format('embedded-opentype'),url(../../../fonts/OpenSans-Italic-webfont.woff) format('woff'),url(../../../fonts/OpenSans-Italic-webfont.ttf) format('truetype'),url(../../../fonts/OpenSans-Italic-webfont.svg#open_sansitalic) format('svg');font-weight:400;font-style:italic}@font-face{font-family:open_sans;src:url(../../../fonts/OpenSans-Light-webfont.eot);src:url(../../../fonts/OpenSans-Light-webfont.eot?#iefix) format('embedded-opentype'),url(../../../fonts/OpenSans-Light-webfont.woff) format('woff'),url(../../../fonts/OpenSans-Light-webfont.ttf) format('truetype'),url(../../../fonts/OpenSans-Light-webfont.svg#open_sanslight) format('svg');font-weight:100;font-style:normal}@font-face{font-family:open_sans;src:url(../../../fonts/OpenSans-LightItalic-webfont.eot);src:url(../../../fonts/OpenSans-LightItalic-webfont.eot?#iefix) format('embedded-opentype'),url(../../../fonts/OpenSans-LightItalic-webfont.woff) format('woff'),url(../../../fonts/OpenSans-LightItalic-webfont.ttf) format('truetype'),url(../../../fonts/OpenSans-LightItalic-webfont.svg#open_sanslight_italic) format('svg');font-weight:100;font-style:italic}@font-face{font-family:open_sans;src:url(../../../fonts/OpenSans-Regular-webfont.eot);src:url(../../../fonts/OpenSans-Regular-webfont.eot?#iefix) format('embedded-opentype'),url(../../../fonts/OpenSans-Regular-webfont.woff) format('woff'),url(../../../fonts/OpenSans-Regular-webfont.ttf) format('truetype'),url(../../../fonts/OpenSans-Regular-webfont.svg#open_sansregular) format('svg');font-weight:400;font-style:normal}
-@font-face{font-family:GothamLight;src:url(../../../fonts/GothamLight.eot);src:url(../../../fonts/GothamLight.eot?#iefix) format('embedded-opentype'),url(../../../fonts/GothamLight.woff) format('woff'),url(../../../fonts/GothamLight.ttf) format('truetype'),url(../../../fonts/GothamLight.svg#GothamLight) format('svg');font-weight:700;font-style:normal}
-
 *,
 *:before,
 *:after {
@@ -65,59 +63,37 @@ header {
 	padding: 0;
 	margin: -2em 0 2em;
 }
-header .logo-link {
-    line-height: 82px;
-}
 .wrapper {
     max-width: 960px;
     margin: 0 auto;
     overflow: hidden;
 }
-header .logo-wrapper {
-    float: left;
-    z-index: 98;
-    left: 0;
-	position: relative;
-	width: 55%;
-	margin-top: 0;
-    top: 0;
-    padding: 10px 0;
-    position: inherit;
-    height: auto;
+.logo-wrapper {
+    position: relative;
+    width: 55.6%;
+    float: left
 }
+
+img.logo-size {max-width: 100%}
 .logo {
-	float: left;
-	margin: 0 8px;
-	width: 36px;
-	height: 82px;
+    float: left;
+    margin: 0 8px;
+    width: 74px;
+    height: 82px;
 }
 .logo-title {
-	padding: 0;
-	margin: 17px 0;
-	top: 0;
-	transform: none;
-	font-size: 12px;
-	width: calc(100% - 70px);
-	vertical-align: middle;
-	line-height: 1em;
-	display: inline-block;
+    position: absolute;
+    top: 50%;
+    -moz-transform: translate(0,-50%);
+    -ms-transform: translate(0,-50%);
+    -webkit-transform: translate(0,-50%);
+    transform: translate(0,-50%);
+    display: inline-block;
+    line-height: 1.1em;
+    color: #737373;
     font-family: Georgia,Times,"Times New Roman",serif;
-    color: #000;
-}
-header .logo-title .logo-title-left {
-    float: left;
-    padding-right: 8px;
-    font-family: Georgia,Times,"Times New Roman",serif;
-    color: #000;
-}
-header .logo-title .logo-title-right {
-    float: left;
-    font-family: "GothamLight",sans-serif;
-	padding-left: 8px;
-    line-height: 1em;
-    font-size: 26px;
-	border-left: 1px solid #dfdfd8;
-    color: #000;
+    font-weight: 100;
+    font-size: 24px;
 }
 .page-header {
     margin-top: 0;
@@ -223,13 +199,6 @@ textarea.ecard {
 	min-height:100px;
 	resize:vertical;
 }
-.recipient {
-	text-align: left!important;
-}
-.ecard-section label span {
-	font-size:14px;
-	font-weight:normal;
-}
 label.other {
     padding: 0!important;
 }
@@ -292,18 +261,6 @@ input::-ms-clear {
 }
 .other-des .checked .other-input::-moz-placeholder {
     opacity: 0;
-}
-input[name="tribute_honoree_name_full"]::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  font-style:italic;
-}
-input[name="tribute_honoree_name_full"]::-moz-placeholder { /* Firefox 19+ */
-  font-style:italic;
-}
-input[name="tribute_honoree_name_full"]:-ms-input-placeholder { /* IE 10+ */
-  font-style:italic;
-}
-input[name="tribute_honoree_name_full"]:-moz-placeholder { /* Firefox 18- */
-  font-style:italic;
 }
 .opt-in {
     margin-top: 25px;
@@ -502,7 +459,7 @@ a.readmorebtn.less:after {
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin: 0 15px 10px 0;
+    margin: 0 15px 0 0;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
@@ -530,17 +487,8 @@ a.readmorebtn.less:after {
     position: absolute;
     left: -9999px;
 }
-.ecard-temp label, .pymt-type label {
+.pymt-type label, .ecard-temp label {
 	margin-bottom: 0;
-	display: inline-block;
-}
-.ecard-temp label img, .pymt-type label img {
-	pointer-events: none;
-}
-.ecard-temp label {
-	padding: 5px;
-}
-.pymt-type label {
 	padding: 10px;
 }
 .pymt-type label:hover, .ecard-temp label:hover {
@@ -550,7 +498,7 @@ a.readmorebtn.less:after {
 	width: 100%;
 }
 .ecard-temp {
-	max-width: 230px;
+	max-width: 150px;
 }
 .cc-img {
 	max-width: 170px;
@@ -645,7 +593,7 @@ a.readmorebtn.less:after {
 .transaction-summary-entry div {
 	padding: 0;
 }
-#level_id-error, #tribute_type-error, #other-amount-error, #designated_id-error, #other-des-input-error, #ecard_id-error  {
+#level_id-error, #tribute_type-error, #other-amount-error, #designated_id-error, #other-des-input-error  {
     padding: 15px;
     color: #a94442;
 	border-radius: 4px;
@@ -761,6 +709,9 @@ input[type=number] {
 	.readmore-js-toggle {
 	    display: block;
 	}
+	.pymt-type.pp {
+		margin: 5px 15px 5px 0;
+	}
 	.donation-form, .col-sm-8.col-xs-12, .main {
         padding: 0;
     }
@@ -779,45 +730,10 @@ input[type=number] {
 	}
 	.banner {
 		padding: 0;
-		margin: 0;
-	}
-	.don-copy {
-		margin-top:1em;
+		margin: 0 0 1em;
 	}
 	header {
 		margin-bottom: 0;
-	}
-	header .logo-wrapper {
-		width: 100%;
-	}
-	.logo {
-		height:55px;
-		width: 50px;
-	}
-	.logo-title {
-		font-size: 13px;
-	}
-	header .logo-link {
-		line-height: 46px;
-	}
-}
-@media only screen and (max-width: 480px) {
-	.logo {
-		height:50px;
-		width: 26px;
-	}
-	.logo-title {
-		font-size: 10px;
-	}
-	header .logo-title .logo-title-right {
-		font-size: 15px;
-	}
-	.pymt-type {
-		margin: 5px 15px 5px 0;
-	}
-	.ecard-temp {
-		margin: 0 5px 5px 0;
-		max-width: 115px;
 	}
 }
 @media only screen and (max-width: 400px) {
@@ -841,22 +757,4 @@ input[type=number] {
     input#other-amount {
         font-size: 15px;
     }
-	header .logo-title .logo-title-left {
-		font-size: 10px;
-		line-height: normal;
-		width: 100%;
-	}
-	header .logo-title .logo-title-right {
-		padding: 0;
-	    line-height: 20px;
-	    font-size: 15px;
-		width: 100%;
-		border: 0;
-	}
-	.logo-title {
-		margin:0;
-	}
-	header .logo-wrapper {
-		margin-top: 6px;
-	}
 }

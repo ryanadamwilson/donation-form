@@ -1,5 +1,4 @@
 (function($) {
-    console.log('hey');
     // define API init
     luminateExtend({
         apiKey: '72737007',
@@ -22,7 +21,12 @@
                 },
                 other_amount: {
                     number: true,
-                    required: '#level-other:checked'
+                    required: '#level-other:checked',
+                    min: function() {
+                        //convert string to integer
+                        var other = parseInt($('#other-amount').data('minimum'));
+                        return other;
+                    }
                 },
                 card_number: {
                     required: '#pymt_type_cc:checked'
@@ -46,7 +50,43 @@
                 billing_address_state: {
                     selectValid: ""  //leave as a blank quotation
                 },
+                shipping_address_state: {
+                    selectValid: ""  //leave as a blank quotation
+                },
+                tribute_notify_address_zip: {
+                    required: function(element) {
+                        if($('#tribute_notify_address_country option:selected').val() == 'United States') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    minlength: function(element) {
+                        if($('#tribute_notify_address_country option:selected').val() == 'United States') {
+                            return 5;
+                        }
+                    }
+                },
                 billing_address_zip: {
+                    required: function(element) {
+                        if($('#billing_address_country option:selected').val() == 'United States') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    minlength: function(element) {
+                        if($('#billing_address_country option:selected').val() == 'United States') {
+                            return 5;
+                        }
+                    }
+                },
+                shipping_address_zip: {
+                    required: function(element) {
+                        if($('#shipping_address_country option:selected').val() == 'United States') {
+                            return true;
+                        }
+                    },
                     minlength: function(element) {
                         if($('#billing_address_country option:selected').val() == 'United States') {
                             return 5;
@@ -58,20 +98,32 @@
                 },
                 designated_id: {
                     required: '.designate:checked'
+                },
+                ecard_id: {
+                    required: '.ecard-check:checked'
                 }
             },
             messages: {
                 level_id: "Please select a donation level.",
                 other_amount: {
                     required: "Please enter the 'Other' amount.",
-                    number: "The 'Other' input has invalid characters. You may only use numbers in this field. A decimal is also allowed."
+                    number: "The 'Other' input has invalid characters. You may only use numbers in this field. A decimal is also allowed.",
+                    min: "The minimum amount for the 'Other' input on this donation form is &#36;{0}. Please enter an amount equal to or greater than &#36;{0}."
                 },
                 tribute_type: "Please select a tribute type.",
                 donor_email: "Please enter a valid email.",
                 billing_address_state: "This field is required.",
+                shipping_address_state: "This field is required.",
+                tribute_notify_address_country: {
+                    minlength: "Please enter a valid US zip code."
+                },
                 billing_address_zip: {
                     minlength: "Please enter a valid US zip code."
                 },
+                shipping_address_zip: {
+                    minlength: "Please enter a valid US zip code."
+                },
+                ecard_id: "Please select a stationery for your eCard.",
                 designated_id: "Please select a program to support.",
                 designated_write_in: "Please identify the 'Other' program you wish to support with your donation."
             },
@@ -82,9 +134,9 @@
                     if($('#donation-errors').length <= 0) {
                         $('.donation-form').before('<div id="donation-errors"></div>');
                     }
-                    if($('#level_id-error, #tribute_type-error, #other-amount-error, #designated_id-error, #other-des-input-error').length <= 0) {
+                    if($('#level_id-error, #tribute_type-error, #other-amount-error, #designated_id-error, #other-des-input-error, #ecard_id-error').length <= 0) {
                         error.prependTo('#donation-errors');
-                        $('#level_id-error, #tribute_type-error, #other-amount-error, #designated_id-error, #other-des-input-error').addClass('alert alert-danger col-xs-12');
+                        $('#level_id-error, #tribute_type-error, #other-amount-error, #designated_id-error, #other-des-input-error, #ecard_id-error').addClass('alert alert-danger col-xs-12');
                     }
                 } else { // This is the default behavior
                     error.insertAfter( element );
@@ -156,7 +208,7 @@
             userData['level_id'] = $('.radio label.checked input[type="radio"]').val();
 
             //collect the general user enetered data and assign them as key/value pairs
-            $('input.required, select.required, input.optional, select.optional, input.form-control-check').each(function() {
+            $('input.info, select.info, input.info.form-control-check').each(function() {
                 var el = $(this);
                 var name = el.data('convio');
                 if (el.is('input')) {
@@ -173,7 +225,7 @@
             //if recurring monthly gift
             if ($('.sustaining').val() == 'true') {
                 userData['sustaining.duration'] = 0;
-                userData['sustaining.frequency'] = 'monthly';
+                userData['sustaining.frequency'] = $('.sustaining').data('convio');
             }
 
             //if donation is a tribute, gather tribute information
@@ -208,7 +260,7 @@
             //if an ecard is requested
             if ($('.ecard-check').val() == 'true') {
                 userData['ecard.send'] = true;
-                userData['ecard.id'] = 7922;
+                userData['ecard.id'] = $('input[name="ecard_id"]:checked').val();
 
                 $('.ecard').each(function() {
                     var el = $(this);
@@ -221,6 +273,39 @@
                 });
             }
 
+            //if shipping information is requested
+            if ($('#shipping').length) {
+                if ($('.ship-check').val() == 'true') {
+                    $('input.billing, select.billing').each(function() {
+                        var el = $(this);
+                        var name = el.data('convio');
+                        name = name.replace('billing', 'shipping');
+                        if (el.is('input')) {
+                            var userEntered = el.val();
+                        } else {
+                            var userEntered = el.children('option:selected').val();
+                        }
+                        //Exclude blank inputs
+                        if (userEntered !== '') {
+                            userData[name] = userEntered;
+                        }
+                    });
+                } else {
+                    $('input.shipping, select.shipping').each(function() {
+                        var el = $(this);
+                        var name = el.data('convio');
+                        if (el.is('input')) {
+                            var userEntered = el.val();
+                        } else {
+                            var userEntered = el.children('option:selected').val();
+                        }
+                        //Exclude blank inputs
+                        if (userEntered !== '') {
+                            userData[name] = userEntered;
+                        }
+                    });
+                }
+            }
             //Use key/value pairs to build API string
             var buildData = '';
             $.each(userData, function(key, value) {
@@ -261,35 +346,12 @@
             } else if(data.donationResponse.redirect) {
                 window.location.replace(data.donationResponse.redirect.url);
             } else {
-                //Otherwise, show success message
-                //Pull in GTM tracking information for analytics
-                $.ajax({
-                    url: "https://secure2.convio.net/mskcc/site/SPageServer?pagename=giv_lunametrics_api&pgwrap=n",
-                    success: function(result){
-                        $('head').append(result);
-                    }
-                });
-                $.ajax({
-                    url: "https://secure2.convio.net/mskcc/site/SPageServer?pagename=google_conversion_async&pgwrap=n",
-                    success: function(result){
-                        $('head').append(result);
-                    }
-                });
-                //Show correct message for one time donation or monthly
-                if ($('.sustaining').val() == 'true') {
-                    $('.monthly-don').removeClass('hidden');
-                } else {
-                    $('.one-time').removeClass('hidden');
-                }
-                //Inject transaction information into thank you page
-                $('.don-amount').text('$' + data.donationResponse.donation.amount.decimal);
-                $('#confirmation_code').text(data.donationResponse.donation.confirmation_code);
-                $('#trans-id').text(data.donationResponse.donation.transaction_id);
-                $('#tax-id').text(data.donationResponse.donation.org_tax_id);
-                setToday();
-                $('.donation-loading, .donation-copy, .donation-form, .readmore-js-toggle').remove();
-                $('.thank-you').addClass('active');
-                $('.thank-you').show();
+                //Otherwise, send to thank you page
+        		var donID  = getURLParameter(window.location.href, 'donID');
+        		function getURLParameter(url, name) {
+        			return (RegExp(name + '=' + '(.+?)(&|$)').exec(url)||[,null])[1];
+        		}
+                window.location.replace('https://secure2.convio.net/mskcc/site/SPageServer?pagename=donate_thanks&donID=' + donID);
             }
         }
 
@@ -381,7 +443,7 @@ function UIHandlers() {
     });
 
     //Display hidden sections
-    $('input.designate, input.tribute-check, input.ecard-check').on('change', function() {
+    $('input.designate, input.tribute-check, input.ecard-check, input.ship-check').on('change', function() {
         $(this).closest('.row').next('div').slideToggle();
     });
 
@@ -402,6 +464,30 @@ function UIHandlers() {
             }
         }
     });
+
+    //Select ecard type
+    $('.ecard-temp').click(function() {
+        var self = $(this);
+        $('.ecard-temp').removeClass('active');
+        self.addClass('active');
+    });
+
+    $('input[type="text"]').keyup(function() {
+        var str = $(this).val();
+        if(str.indexOf('&') >= 0) {
+            str = str.replace(/&/g, "and");
+            console.log(str);
+            $(this).val(str);
+        }
+    });
+
+    //
+    function changeAmp() {
+        var str = document.form.tribute_notify_name_full.value;
+        str = str.replace(/&/g, "and");
+        console.log(str);
+        document.form.tribute_notify_name_full.value = str;
+    };
 
     //Read more function
     $('.readmore-js-toggle').click(function() {
