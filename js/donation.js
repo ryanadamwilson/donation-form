@@ -64,6 +64,8 @@
                     minlength: function(element) {
                         if($('#tribute_notify_address_country option:selected').val() == 'United States') {
                             return 5;
+                        } else {
+                            return 0;
                         }
                     }
                 },
@@ -78,6 +80,8 @@
                     minlength: function(element) {
                         if($('#billing_address_country option:selected').val() == 'United States') {
                             return 5;
+                        } else {
+                            return 0;
                         }
                     }
                 },
@@ -90,6 +94,8 @@
                     minlength: function(element) {
                         if($('#billing_address_country option:selected').val() == 'United States') {
                             return 5;
+                        } else {
+                            return 0;
                         }
                     }
                 },

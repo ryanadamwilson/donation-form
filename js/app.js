@@ -20,6 +20,17 @@
 					if (self.levels.constructor != Array) {
 						self.levels = [self.levels];
 					}
+					$scope.ship = false;
+					function shipping() {
+						var ship = self.data.donationFields.donationField;
+						for (i = 0; i < ship.length; i++) {
+							if(ship[i].elementName.indexOf('shipping') > -1) {
+								$scope.ship = true;
+								break;
+							}
+						}
+					};
+					shipping();
 				});
 				UIHandlers();
 			} else if (data.errorResponse.message.indexOf('not found' >= 0)){

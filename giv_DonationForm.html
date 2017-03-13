@@ -253,7 +253,7 @@
                 <div class="row padding15-0-0" ng-if="fieldCtrl.data.supportsEcard == 'true'">
                     <div class="checkbox col-xs-12">
                         <label>
-                            <input type="checkbox" name="ecard_send" data-convio="ecard.send" [[?[[S80:checked]]::ecard::value="true" checked::value="false"]] class="ecard-check"> <span class="span-check">Yes, I would like to send an eCard.</span>
+                            <input type="checkbox" name="ecard_send" data-convio="ecard.send" [[?[[S80:checked]]::ecard::value="true" checked::value="false"]] class="ecard-check"> <span class="span-check">Yes, I would like to send an ecard.</span>
                         </label>
                     </div>
                 </div>
@@ -270,8 +270,43 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="checkbox col-xs-12" style="padding-bottom:7px;">
+                            <label>
+                                <input type="checkbox" name="ecard_send_date" value="true" class="form-control-check send-date-check" checked> <span class="span-check">Schedule this ecard to send on a future date.</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row marg-bott15" ng-controller="dateController as date">
+                        <div class="col-md-6 col-sm-9 col-xs-12 no-padd sendDate">
+                            <div class="col-sm-4 col-xs-8">
+                                <label class="control-label">Month</label>
+                                <select class="form-control required" name="ecard_send_date_month" ng-model="selectedMonth" ng-init="selectedMonth = '[[S9:pattern:MM]]'" required>
+                                    <option
+                                        ng-repeat="month in date.months"
+                                        ng-selected="{{month == '[[S9:pattern:MM]]'}}"
+                                        value="{{month}}">{{month}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4 col-xs-8">
+                                <label class="control-label">Day</label>
+                                <select class="form-control required" name="ecard_send_date_day" ng-model="selectedDay" ng-init="selectedDay = '[[S9:pattern:dd]]'" required>
+                                    <option
+                                        ng-repeat="day in date.days"
+                                        ng-selected="{{day == '[[S9:pattern:dd]]'}}"
+                                        value="{{day}}">{{day}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4 col-xs-8">
+                                <label class="control-label">Year</label>
+                                <select class="form-control required" name="ecard_send_date_year" required>
+                                    <option ng-repeat="year in date.years" value="{{year}}">{{year}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-9 col-md-6 col-xs-12">
-                            <label class="control-label">eCard Subject:</label>
+                            <label class="control-label">ecard Subject:</label>
                             <div>
                                 <input type="text" class="form-control ecard required" name="ecard_subject" data-convio="ecard.subject">
                             </div>
@@ -279,7 +314,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-md-9">
-                            <label class="control-label">eCard Message:</label>
+                            <label class="control-label">ecard Message:</label>
                             <div>
                                 <textarea class="form-control ecard required" name="ecard_message" data-convio="ecard.message"></textarea>
                             </div>
@@ -288,31 +323,31 @@
                     <div class="row">
                         <div class="checkbox col-xs-12">
                             <label>
-                                <input type="checkbox" name="ecard_copy_sender" data-convio="ecard.copy_sender" value="false" class="form-control-check ecard"> <span class="span-check">Yes, send me a copy of the eCard.</span>
+                                <input type="checkbox" name="ecard_copy_sender" data-convio="ecard.copy_sender" value="false" class="form-control-check ecard"> <span class="span-check">Yes, send me a copy of the ecard.</span>
                             </label>
                         </div>
                     </div>
                     <div class="row padding15-15-0">
-                        <label class="">Select an eCard template:</label>
+                        <label class="">Select an ecard template:</label>
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="ecard-temp">
                                 <label>
-                                    <input type="radio" name="ecard_id" data-convio="ecard.id" value="8531" class="">
-                                    <img src="https://secure2.convio.net/mskcc/images/content/pagebuilder/holiday-medium-thumb.jpg">
+                                    <input type="radio" name="ecard_id" data-convio="ecard.id" value="8662" class="">
+                                    <img src="https://secure2.convio.net/mskcc/images/content/pagebuilder/Birthday_ecard_thumbnail_1.jpg">
                                 </label>
                             </div>
                             <div class="ecard-temp">
                                 <label>
-                                    <input type="radio" name="ecard_id" data-convio="ecard.id" value="8537" class="">
-                                    <img src="https://secure2.convio.net/mskcc/images/content/pagebuilder/patient-medium-thumb.jpg">
+                                    <input type="radio" name="ecard_id" data-convio="ecard.id" value="8664" class="">
+                                    <img src="https://secure2.convio.net/mskcc/images/content/pagebuilder/Birthday_ecard_thumbnail_2.jpg">
                                 </label>
                             </div>
                             <div class="ecard-temp">
                                 <label>
-                                    <input type="radio" name="ecard_id" data-convio="ecard.id" value="8536" class="">
-                                    <img src="https://secure2.convio.net/mskcc/images/content/pagebuilder/science-medium-thumb.jpg">
+                                    <input type="radio" name="ecard_id" data-convio="ecard.id" value="8665" class="">
+                                    <img src="https://secure2.convio.net/mskcc/images/content/pagebuilder/Birthday_ecard_thumbnail_3.jpg">
                                 </label>
                             </div>
                         </div>
